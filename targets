@@ -1,0 +1,13 @@
+TARGETS = prod/pep/AzureSQLPEP/ProxyCommon \
+          prod/pep/AzureSQLPEP/SQLTDS \
+          prod/pep/AzureSQLPEP/SQLTask \
+          prod/pep/AzureSQLPEP/SQLProxy \
+          prod/pep/AzureSQLPEP/ProxyFrame \
+          prod/pep/AzureSQLPEP/ProxyMain \
+          prod/pep/AzureSQLPEP/ProxyWorker \
+          prod/pep/EnforcerModule/DAECommon \
+          prod/pep/EnforcerModule/DAECCPolicyMgr \
+          prod/pep/EnforcerModule/DAESQLEnforcer \
+          prod/pep/EnforcerModule/DAESQLParser \
+          prod/pep/EnforcerModule/DAEUserAttributes \
+          prod/pep/EnforcerModule/DAEBootstrap

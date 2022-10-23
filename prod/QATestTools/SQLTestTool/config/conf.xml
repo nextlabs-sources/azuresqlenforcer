@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SQLTest>
+	<Instance  Server="sqltest002.database.windows.net" Database="CDCDB" Username="jiehuang@cloudazdev.onmicrosoft.com" Passwd="123next!">
+		<SQLText output="c:\out1.csv" runtime="10">SELECT * FROM Account02</SQLText>
+	</Instance>
+	
+	<Instance  Server="sqltest002.database.windows.net" Database="db01" Username="jiehuang@cloudazdev.onmicrosoft.com" Passwd="123next!">
+		<SQLText output="c:\out2.csv" runtime="10" >SELECT * FROM nxl_users</SQLText>
+	</Instance>
+</SQLTest>

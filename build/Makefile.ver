@@ -1,0 +1,12 @@
+# Produce version information
+#
+# Description:
+#	This file should be included in top-level Makefile 
+# http://sharepoint/sites/support/release/Lists/Current%00Releases/AllItems.aspx
+
+
+VERSION_PRODUCT_DAE       = DAE for SQL Server
+VERSION_MAJOR_DAE         = 2022
+VERSION_MINOR_DAE         = 05
+VERSION_MAINTENANCE_DAE   = 0
+VERSION_PATCH_DAE         = 0

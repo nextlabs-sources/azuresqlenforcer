@@ -1,0 +1,58 @@
+StringCompare(@value1 varchar(500), @value2 varchar(500), @Operate varchar(32)) 
+Returns bit 
+Begin
+Declare @result bit
+If(@operate='is')
+   if(@value1=@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@operate='is not')
+   if(@value1!=@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@operate='greater than')
+   if(@value1>@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='greater than or equals to')
+ if(@value1>=@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='less than')
+ if(@value1<@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='less than or equals to')
+ if(@value1<=@value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='is null')
+ if(@value1 is null)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='is not null')
+ if(@value1 is not null)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='like')
+ if(@value1 like @value2)
+   Set @result=1
+   else
+   Set @result=0
+else if(@Operate='not like')
+ if(@value1 not like @value2)
+   Set @result=1
+   else
+   Set @result=0
+else
+   Set @result=0
+return (@result)
+END

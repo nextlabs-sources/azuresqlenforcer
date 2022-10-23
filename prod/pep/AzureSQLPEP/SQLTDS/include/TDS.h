@@ -1,0 +1,42 @@
+#pragma once
+
+#ifndef __TDS_H__
+#define __TDS_H__
+
+#include "SMP.h"
+#include "tdsHelper.h"
+#include "tdsPacket.h"
+#include "tdsAllHeaders.h"
+#include "TdsBufferList.h"
+#include "tdsClientRPC.h"
+#include "tdsColumnData.h"
+#include "tdsColumnDataInfo.h"
+#include "tdsCountVarValue.h"
+#include "tdsCryptoMetaData.h"
+#include "tdsEK_INFO.h"
+#include "tdsFedauth.h"
+#include "tdsHeader.h"
+#include "tdsLogin7.h"
+#include "tdsPreLogin.h"
+#include "tdsSqlBatch.h"
+#include "tdsSSPI.h"
+#include "tdsTableName.h"
+#include "tdsToken.h"
+#include "tdsTokenColumnMetaData.h"
+#include "tdsTokenDone.h"
+#include "tdsTokenDoneInproc.h"
+#include "tdsTokenEnvChange.h"
+#include "tdsTokenError.h"
+#include "tdsTokenFeatureExtAck.h"
+#include "tdsTokenFedauthInfo.h"
+#include "tdsTokenInfo.h"
+#include "tdsTokenLoginAck.h"
+#include "tdsTokenNbcRow.h"
+#include "tdsTokenOrder.h"
+#include "tdsTokenRow.h"
+#include "tdsTokenStream.h"
+#include "tdsTypeHelper.h"
+#include "tdsTypeInfo.h"
+#include "TDSException.h"
+
+#endif

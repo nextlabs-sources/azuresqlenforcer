@@ -1,0 +1,1 @@
+"%~dp0\register_rls.bat" unreg

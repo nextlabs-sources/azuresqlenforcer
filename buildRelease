@@ -1,0 +1,112 @@
+#!/bin/bash
+#
+# DESCRIPTION
+#	Invoke release build
+#
+# USAGE:
+#	Steps to invoke this script.
+#		export NLEXTERNALDIR=<path>
+#		export BUILD_NUMBER=<#>
+#		source ./setEnv
+#		./buildRelease
+#
+# HUDSON BUILD:
+#	cd $WORKSPACE/D_SiriusR2
+#	export NLEXTERNALDIR=C:/hudson/jobs/external_latest/workspace/external
+#	source ./setEnv
+#	./buildRelease
+#
+# Build Options:
+#	Note that you can specific installer target (i.e., install_*) without specifying compile 
+#	targets first (i.e., pc, kmc, wde or devtools). However, it is easier to understand if 
+#	we specify compile targets before installer targets.
+#
+#	make -f build/Makefile.compile || exit $?
+#	make -f build/Makefile.compile compile_pc compile_kmc compile_lme compile_ne compile_oce compile_oe compile_rde compile_se compile_wde compile_devtool install_pc install_kmc install_lme install_ne install_oce install_oe install_rde install_se install_wde install_support || exit $?
+#
+# Publish Options:
+#	Note that target "pc" refers to publishing PC installers. It should only be called
+#	after calling install/pc/buildInstaller at this time. Here is a quick summary of
+#	definition popular targets:
+#		wde: wde_local wde_sync
+#		pC: pc_local pc_sync
+#		support: sdk reskit
+#		archive: archive_bin archive_xlib archive_symbol archive_install
+#
+#	make -f build/Makefile.publish TYPE=release || exit $?
+#	make -f build/Makefile.publish TYPE=release kmc lme ne oce oe rde se wde pc support archive || exit $
+
+
+LOG_FILE=buildRelease.log
+BUILD_MANIFEST_FILE=build.manifest
+
+(
+set -x
+# Extract Perforce Workspace and Hudson info (only if running on Hudson)
+if [ -f ../config.xml ]; then
+	build/getGitWorkspaceInfo.pl ../config.xml
+fi
+
+# Prepare environment
+./configure --type=release --mapBuildRoot=g || exit $?
+export MSENFORCECOMMON=C:/Jenkins/jobs/release_MSEnforcerCommon_master/workspace
+export SIGNING_SERVER=PRASLIN
+source build.config
+
+# Prepare dependencies
+#make -f build/Makefile.xlib
+
+# Compile  code
+make -f build/Makefile.compile compile || exit $?
+
+# Copy files
+BIN_OUTPUT_DIR=${NLBUILDROOT}/bin/${BUILDTYPE}_win_x64
+BIN_OUTPUT_CONFIG_DIR=$BIN_OUTPUT_DIR/config
+
+mkdir $BIN_OUTPUT_CONFIG_DIR
+
+# Copy certificate to the output folder
+cp -pf ${NLBUILDROOT}/prod/pep/AzureSQLPEP/certificate/tdsproxy.pinta.com.pfx $BIN_OUTPUT_DIR
+
+# Copy config file to the output folder
+cp -pf ${NLBUILDROOT}/prod/pep/AzureSQLPEP/config/config.ini $BIN_OUTPUT_DIR
+cp -pf ${NLBUILDROOT}/prod/pep/EnforcerModule/source/config.ini $BIN_OUTPUT_CONFIG_DIR
+
+# Copy the dependency files from MSEnforcerCommon to the output folder
+cp -pf ${MSENFORCECOMMON}/bin/${BUILDTYPE}_win_x64/celog.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/bin/${BUILDTYPE}_win_x64/celog.pdb $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/thirdpart/x64-windows/release/bin/jsoncpp.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/thirdpart/x64-windows/release/bin/LIBEAY32.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/thirdpart/x64-windows/release/bin/SSLEAY32.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/thirdpart/x64-windows/release/bin/zlib1.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/bin/${BUILDTYPE}_win_x64/QueryCloudAZSDKcpp.dll $BIN_OUTPUT_DIR
+cp -pf ${MSENFORCECOMMON}/bin/${BUILDTYPE}_win_x64/QueryCloudAZSDKcpp.pdb $BIN_OUTPUT_DIR
+
+# Create the installer
+make -f build/Makefile.compile install_dae_for_sql_server || exit $?
+
+# Publish packages and artifacts to BODA only if PUBLISH_TO_BODA environment variable is set
+# if [ "X${PUBLISH_TO_BODA}" = "XYes" -o "X${PUBLISH_TO_BODA}" = "Xyes" -o "X${PUBLISH_TO_BODA}" = "XYES" -o "X${PUBLISH_TO_BODA}" = "X1" ]
+# then
+# 	Publish installers and artifacts
+# 	make -f build/Makefile.publish TYPE=release wfse archive || exit $?
+# fi
+
+# Create and publish build manifest
+# build/createBuildManifest.pl $LOG_FILE > $BUILD_MANIFEST_FILE || exit $?
+
+# Publish build-manifest to BODA only if PUBLISH_TO_BODA environment variable is set
+# if [ "X${PUBLISH_TO_BODA}" = "XYes" -o "X${PUBLISH_TO_BODA}" = "Xyes" -o "X${PUBLISH_TO_BODA}" = "XYES" -o "X${PUBLISH_TO_BODA}" = "X1" ]
+#then
+#	make -f build/Makefile.publish TYPE=release manifest || exit $?
+#fi
+#set +x
+
+echo
+echo
+echo "####################### BUILD MANIFEST CONTENTS ########################"
+#cat ${WORKSPACE}/${BUILD_MANIFEST_FILE}
+echo "########################################################################"
+) 2>&1 | tee $LOG_FILE
+
+exit ${PIPESTATUS[0]}
